@@ -1,0 +1,44 @@
+.list {
+  padding: 0;
+  margin: 10px 0;
+}
+
+.list-item {
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 5px;
+}
+.avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: chocolate;
+  margin-right: 10px;
+}
+.content-wrapper {
+  flex-grow: 1;
+}
+
+.comment-text {
+  font-style: italic;
+  font-size: 12px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.username {
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.post-date {
+  font-size: 11px;
+  color: #777;
+}
+.reply-wrapper {
+  font-weight: bold;
+  font-size: 10px;
+}
+.reply-link {
+  color: white;
+}
