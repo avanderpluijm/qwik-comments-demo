@@ -16,6 +16,7 @@ model User {
   posts    Post[]
   comments Comment[]
   likes    Like[]
+  color    String    @default("green-400")
 }
 
 model Post {
