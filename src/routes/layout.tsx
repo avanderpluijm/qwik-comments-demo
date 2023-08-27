@@ -1,11 +1,20 @@
 import { component$, createContextId, Slot, useContextProvider, useStore } from '@builder.io/qwik';
+import { routeLoader$ } from '@builder.io/qwik-city';
+import { PrismaClient, User } from '@prisma/client';
 import { Header } from '~/components/shared/header/header';
 
+export const useGetCurrentUser = routeLoader$(async () => {
+  const prisma = new PrismaClient();
+  return await prisma.user.findFirst({where: {name: 'kyle'}});
+})
+
 // Context to mimic authorization state
-export const CTX = createContextId<{ authenticated: boolean }>('auth');
+export const CTX = createContextId<{ authenticated: boolean, user: User }>('auth');
 
 export default component$(() => {
-  const authData = useStore({ authenticated: true });
+  const user = useGetCurrentUser(); 
+
+  const authData = useStore({ authenticated: user.value?.id || false, user: user.value });
   useContextProvider(CTX, authData); 
   
   return (

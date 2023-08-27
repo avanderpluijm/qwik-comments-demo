@@ -4,6 +4,7 @@ import { CommentForm } from "~/components/comments/commentForm/commentForm";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Avatar } from "~/components/shared/avatar/avatar";
 dayjs.extend(relativeTime);
 
 export const CommentList = component$(() => {
@@ -13,12 +14,11 @@ export const CommentList = component$(() => {
     <div class="my-4">
       {comments.value?.map((comment, index) => (
         <div key={index} class="flex mb-2">
-          {/* TODO: Dynamic color is not applied after rendering */}
-          <div
-            class={` bg-blue-700 rounded-full w-10 h-10 text-center leading-10 font-bold text-xl mr-4 bg-${comment.user.color}`}
-          >
-            {comment.user.name.substring(0, 2).toUpperCase()}
-          </div>
+          <Avatar
+            name={comment.user.name}
+            color={comment.user.color}
+            size={10}
+          />
           <div class="flex-1">
             <div>
               <span class="text-xs font-bold mr-2">@{comment.user.name}</span>

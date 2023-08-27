@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ContentEditable placeholder text */
+[data-placeholder]:empty:before{
+    content: attr(data-placeholder);
+    
+    @apply text-sm text-slate-600;
+}

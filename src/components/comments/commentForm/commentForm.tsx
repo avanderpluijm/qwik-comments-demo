@@ -4,6 +4,7 @@ import { Form } from "@builder.io/qwik-city";
 import { useAddComment } from "~/routes";
 import styles from "./commentForm.module.css";
 import { CTX } from "~/routes/layout";
+import { Avatar } from "~/components/shared/avatar/avatar";
 
 interface CommentProps {
   reply?: boolean;
@@ -19,25 +20,22 @@ export const CommentForm = component$<CommentProps>((props) => {
 
   return (
     <section class={styles["wrapper"]}>
-      <div class="mr-4">
-        {/* <img
-          src={session.value.avatar}
-          width={reply ? 30 : 40}
-          height={reply ? 30 : 40}
-        /> */}
-      </div>
-      <Form class={styles["form"]} action={action}>
+      <Avatar name={user.user.name} color={user.user.color} size={10} />
+
+      <Form class="mb-2 flex-1 flex flex-col content-end" action={action}>
         <div
-          class="bg-transparent border-b focus:outline-none block w-full overflow-hidden resize-none"
+          class={`bg-transparent border-b py-1 text-sm focus:outline-none block w-full overflow-hidden resize-none`}
           role="textbox"
           contentEditable="true"
-          placeholder={`Add a ${reply ? "reply" : "comment"}...`}
+          data-placeholder={`Add a ${reply ? "reply" : "comment"}...`}
         >
           {action.formData?.get("comment")?.toString()}
         </div>
+        {/* TODO: Only show buttons when textbox is active */}
         <div class="text-right mt-2">
+          {/* TODO: Add cancel button */}
           <button
-            class="bg-slate-600 py-2 px-4 rounded-xl text-slate-400 hover:text-slate-50 "
+            class="bg-slate-600 py-2 px-4 rounded-full text-slate-400 hover:text-slate-50 "
             type="submit"
           >
             {reply ? "Reply" : "Comment"}
