@@ -4,14 +4,6 @@ section.wrapper {
   display: flex;
 }
 
-.avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: chocolate;
-  margin-right: 10px;
-}
-
 .form {
   margin-bottom: 3px;
   flex-grow: 1;
@@ -23,22 +15,4 @@ section.wrapper {
 .textarea {
   padding: 5px;
   resize: false;
-}
-
-.submit-wrapper {
-  text-align: right;
-  margin-top: 3px;
-}
-.submit {
-  margin-top: 5px;
-  display: inline-block;
-  border: 0;
-  color: white;
-  border-radius: 10px;
-  padding: 5px 10px;
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-.submit:hover {
-  background-color: rgba(255, 255, 255, 0.3);
 }
