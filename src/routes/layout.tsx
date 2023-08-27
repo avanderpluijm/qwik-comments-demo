@@ -1,7 +1,7 @@
 import { component$, createContextId, Slot, useContextProvider, useStore } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { PrismaClient, User } from '@prisma/client';
-import { Header } from '~/components/shared/header/header';
+import { Header } from '~/components/layout/header/header';
 
 export const useGetCurrentUser = routeLoader$(async () => {
   const prisma = new PrismaClient();

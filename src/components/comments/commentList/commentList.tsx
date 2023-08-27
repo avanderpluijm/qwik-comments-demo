@@ -4,7 +4,7 @@ import { CommentForm } from "~/components/comments/commentForm/commentForm";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Avatar } from "~/components/shared/avatar/avatar";
+import { Avatar } from "~/components/ui/avatar/avatar";
 dayjs.extend(relativeTime);
 
 export const CommentList = component$(() => {

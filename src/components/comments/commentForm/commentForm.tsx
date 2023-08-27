@@ -4,7 +4,7 @@ import { Form } from "@builder.io/qwik-city";
 import { useAddComment } from "~/routes";
 import styles from "./commentForm.module.css";
 import { CTX } from "~/routes/layout";
-import { Avatar } from "~/components/shared/avatar/avatar";
+import { Avatar } from "~/components/ui/avatar/avatar";
 
 interface CommentProps {
   reply?: boolean;
