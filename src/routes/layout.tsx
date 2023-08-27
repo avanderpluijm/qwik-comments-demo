@@ -1,20 +1,18 @@
-import { component$, Slot, useStyles$ } from '@builder.io/qwik';
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { component$, createContextId, Slot, useContextProvider, useStore } from '@builder.io/qwik';
+import { Header } from '~/components/header/header';
 
-import styles from './styles.css?inline';
 
-export const useServerTimeLoader = routeLoader$(() => {
-  return {
-    date: new Date().toISOString(),
-  };
-});
+export const CTX = createContextId<{ authenticated: boolean }>('auth');
+
 
 export default component$(() => {
-  useStyles$(styles);
+  const authData = useStore({ authenticated: true });
+  useContextProvider(CTX, authData); 
+  
   return (
     <>
-      {/* <Header /> */}
-      <main>
+      <Header />
+      <main class="pt-16">
         <Slot />
       </main>
       {/* <Footer /> */}
