@@ -4,8 +4,8 @@ import { routeAction$, routeLoader$, z, zod$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
 
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
-import { InlineExpander } from "~/components/shared/inlineExpander/inlineExpander";
-import { Sidebar } from "~/components/shared/sidebar/sidebar";
+import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
+import { Sidebar } from "~/components/layout/sidebar/sidebar";
 
 import ImgVideoPlaceholder from "~/media/img/video_placeholder.png?jsx";
 

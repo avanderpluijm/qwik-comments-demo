@@ -4,7 +4,7 @@ import {
   HiHandThumbUpOutline,
 } from "@qwikest/icons/heroicons";
 
-import styles from "./commentToolbar.module.css";
+import { Button } from "~/components/ui/button/button";
 
 // Create a component that renders a comment toolbar
 export const CommentToolbar = component$(() => {
@@ -18,23 +18,27 @@ export const CommentToolbar = component$(() => {
   const toggle = $(() => (collapsed.value = !collapsed.value));
 
   return (
-    <div>
-      <div class={styles["toolbar"]}>
-        <div class="w-12">
-          <HiHandThumbUpOutline class="inline" />
-          <span class="text-sm text-slate-400 ml-1">{randomVoteCount}</span>
+    <>
+      <div class="flex flex-row items-center cursor-pointer mt-1 gap-2">
+        <div>
+          <Button intent="secondary" square={true} padding="tight">
+            <HiHandThumbUpOutline />
+          </Button>
+          <span class="text-sm text-slate-400">{randomVoteCount}</span>
         </div>
-        <div class="w-12">
-          <HiHandThumbDownOutline class="inline" />
-          <span class="text-sm text-slate-400 ml-1">{randomVoteCount}</span>
+        <div>
+          <Button intent="secondary" square={true} padding="tight">
+            <HiHandThumbDownOutline />
+          </Button>
+          <span class="text-sm text-slate-400">{randomVoteCount}</span>
         </div>
-        <div class={styles["reply"]} onclick$={toggle}>
+        <Button intent="secondary" clickHandler={toggle}>
           Reply
-        </div>
+        </Button>
       </div>
       <section hidden={collapsed.value}>
         <Slot />
       </section>
-    </div>
+    </>
   );
 });
