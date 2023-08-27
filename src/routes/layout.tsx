@@ -1,9 +1,8 @@
 import { component$, createContextId, Slot, useContextProvider, useStore } from '@builder.io/qwik';
-import { Header } from '~/components/header/header';
+import { Header } from '~/components/shared/header/header';
 
-
+// Context to mimic authorization state
 export const CTX = createContextId<{ authenticated: boolean }>('auth');
-
 
 export default component$(() => {
   const authData = useStore({ authenticated: true });
@@ -12,10 +11,9 @@ export default component$(() => {
   return (
     <>
       <Header />
-      <main class="pt-16">
+      <main class="py-16 px-2">
         <Slot />
       </main>
-      {/* <Footer /> */}
     </>
   );
 });

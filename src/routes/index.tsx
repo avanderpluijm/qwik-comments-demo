@@ -1,15 +1,31 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeAction$, routeLoader$, z, zod$ } from "@builder.io/qwik-city";
+import { PrismaClient } from "@prisma/client";
 
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
-import { comments } from "~/components/comments/Comments";
-import { Sidebar } from "~/components/sidebar/sidebar";
+import { InlineExpander } from "~/components/shared/inlineExpander/inlineExpander";
+import { Sidebar } from "~/components/shared/sidebar/sidebar";
 
 import ImgVideoPlaceholder from "~/media/img/video_placeholder.png?jsx";
 
-export const useComments = routeLoader$(() => {
-  return comments;
+export const useGetPost = routeLoader$(async ({ status }) => {
+  // const postId = parseInt(params['postId'], 1);
+  const prisma = new PrismaClient();
+  const post = await prisma.post.findFirst();
+  if (!post) status(404);
+  return post;
+});
+
+export const useComments = routeLoader$(async ({ status }) => {
+  const prisma = new PrismaClient();
+  const post = await prisma.post.findFirst();
+  if (!post) status(404);
+
+  return await prisma.comment.findMany({
+    where: { postId: post?.id || 1, parentId: null },
+    include: { _count: { select: { children: {} } }, user: true },
+  });
 });
 
 // Comment Form submit action
@@ -22,19 +38,15 @@ export const useAddComment = routeAction$((data) => {
   };
 }, zod$({ comment: z.string() }));
 
-export const useAuthenticated = routeLoader$(() => {
-  return {
-    status: true,
-    username: "User 1",
-    avatar: "https://api.multiavatar.com/3.svg",
-  };
-});
-
 export default component$(() => {
+  const post = useGetPost();
+
   return (
     <section class="md:grid md:grid-cols-12 gap-4">
       <main class="md:col-span-8">
         <ImgVideoPlaceholder class="w-full" />
+        <h1 class="text-lg font-bolder py-2">{post.value?.title}</h1>
+        <InlineExpander content={post.value?.description || ""} length={150} />
         <CommentPanel />
       </main>
       <Sidebar />

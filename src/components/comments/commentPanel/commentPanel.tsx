@@ -7,7 +7,7 @@ export const CommentPanel = component$(() => {
   const comments = useComments();
   
   return (
-    <section class="p-2">
+    <section class="">
       <h2 class=" text-base py-4 text-slate-50">{comments.value.length} Comments</h2>
 
       <CommentForm />

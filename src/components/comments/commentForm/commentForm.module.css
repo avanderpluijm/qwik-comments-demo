@@ -11,8 +11,3 @@ section.wrapper {
   flex-direction: column;
   justify-content: right;
 }
-
-.textarea {
-  padding: 5px;
-  resize: false;
-}
