@@ -7,8 +7,6 @@ import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
 import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
 import { Sidebar } from "~/components/layout/sidebar/sidebar";
 
-import ImgVideoPlaceholder from "~/media/img/video_placeholder.png?jsx";
-
 export const useGetPost = routeLoader$(async ({ status }) => {
   // const postId = parseInt(params['postId'], 1);
   const prisma = new PrismaClient();
@@ -44,7 +42,7 @@ export default component$(() => {
   return (
     <section class="md:grid md:grid-cols-12 gap-4">
       <main class="md:col-span-8">
-        <ImgVideoPlaceholder class="w-full" />
+        <video src="./preview.mp4" controls={true} autoPlay muted loop />
         <h1 class="text-lg font-bolder py-2">{post.value?.title}</h1>
         <InlineExpander content={post.value?.description || ""} length={150} />
         <CommentPanel />
