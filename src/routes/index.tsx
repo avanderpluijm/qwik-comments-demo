@@ -3,33 +3,16 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeAction$, routeLoader$, z, zod$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
 
-import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
-import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
-import { Sidebar } from "~/components/layout/sidebar/sidebar";
-import { Avatar } from "~/components/ui/avatar/avatar";
-import { Button } from "~/components/ui/button/button";
-import {
-  HiHandThumbDownOutline,
-  HiHandThumbUpOutline,
-} from "@qwikest/icons/heroicons";
-
-export const useGetPost = routeLoader$(async ({ status }) => {
-  // const postId = parseInt(params['postId'], 1);
+export const useGetPosts = routeLoader$(async ({ status }) => {
   const prisma = new PrismaClient();
-  const post = await prisma.post.findFirst();
-  if (!post) status(404);
-  return post;
-});
-
-export const useComments = routeLoader$(async ({ status }) => {
-  const prisma = new PrismaClient();
-  const post = await prisma.post.findFirst();
-  if (!post) status(404);
-
-  return await prisma.comment.findMany({
-    where: { postId: post?.id || 1, parentId: null },
-    include: { _count: { select: { children: {} } }, user: true },
+  const posts = await prisma.post.findMany({
+    include: {
+      _count: { select: { comments: { where: { parent: null } } } },
+      user: true,
+    },
   });
+  if (!posts) status(404);
+  return posts;
 });
 
 // Comment Form submit action
@@ -43,46 +26,30 @@ export const useAddComment = routeAction$((data) => {
 }, zod$({ comment: z.string() }));
 
 export default component$(() => {
-  const post = useGetPost();
+  const posts = useGetPosts();
 
   return (
-    <section class="md:grid md:grid-cols-12 gap-4">
-      <main class="md:col-span-8">
-        <video src="./preview.mp4" controls={true} autoPlay muted loop />
-        <h1 class="text-lg font-bold py-2">{post.value?.title}</h1>
-        <div class="flex items-center mb-4 gap-4 flex-1">
-          <div>
-            <Avatar name="Jake" color="yello-200" />
+    <section>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {posts.value?.map((post, index) => (
+          <div
+            key={index}
+            class="rounded-lg overflow-hidden hover:bg-slate-700"
+          >
+            <a href={`/posts/${post.slug}`}>
+              <img src={post.thumbnail} width={400} height={200} />
+              <div class="text-sm p-2">{post.title}</div>
+              {post._count?.comments}
+            </a>
           </div>
-          <div>
-            <h3 class="font-bolder">Jake the publisher</h3>
-            <div class="text-sm text-slate-400">878 subscribers</div>
-          </div>
-          <div>
-            <Button intent="secondary">Subscribe</Button>
-          </div>
-          <div>
-            <Button intent="secondary">
-              <HiHandThumbDownOutline class="inline m-2" />
-              <span class="text-sm text-slate-400">120</span>
-              <HiHandThumbUpOutline class="inline m-2" />
-              <span class="text-sm text-slate-400">72</span>
-            </Button>
-          </div>
-          <div>
-            <Button>Share</Button>
-          </div>
-        </div>
-        <InlineExpander content={post.value?.description || ""} length={150} />
-        <CommentPanel />
-      </main>
-      <Sidebar />
+        ))}
+      </div>
     </section>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Comments with Qwik",
+  title: "QwikTube demo",
   meta: [
     {
       name: "description",

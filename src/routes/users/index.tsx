@@ -4,8 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 export const useGetUsers = routeLoader$(async () => {
   const prisma = new PrismaClient();
-  const users = await prisma.user.findMany();
-  return users;
+  return await prisma.user.findMany();
 });
 
 export default component$(() => {

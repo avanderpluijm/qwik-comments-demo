@@ -2,10 +2,10 @@ import { component$ } from "@builder.io/qwik";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { useComments } from "~/routes/index";
 import { CommentForm } from "~/components/comments/commentForm/commentForm";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import { Avatar } from "~/components/ui/avatar/avatar";
+import { useComments } from "~/routes/posts/[slug]";
 dayjs.extend(relativeTime);
 
 export const CommentList = component$(() => {
