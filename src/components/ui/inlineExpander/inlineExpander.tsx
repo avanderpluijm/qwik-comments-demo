@@ -20,12 +20,12 @@ export const InlineExpander = component$<InlineExpanderProps>(
 
     // Render full text when content is not expandable
     if (!expandable)
-      return <div class="bg-slate-700 rounded p-2">{content}</div>;
+      return <div class="bg-slate-700 rounded p-2 text-sm">{content}</div>;
 
     // Render full text when content is expanded
     if (expanded.value) {
       return (
-        <div class="bg-slate-700 rounded p-2">
+        <div class="bg-slate-700 rounded p-2 text-sm">
           {content}
           <div class="mt-2 text-sm cursor-pointer" onClick$={toggle}>
             Show less
@@ -38,12 +38,12 @@ export const InlineExpander = component$<InlineExpanderProps>(
     return (
       <div
         onClick$={toggle}
-        class={`bg-slate-700 rounded p-2 ${
+        class={`bg-slate-700 rounded p-2 text-sm ${
           !expanded.value && "hover:bg-slate-500 cursor-pointer"
         }`}
       >
         {content.substring(0, length)}
-        <div class="m-1 text-sm">...more</div>
+        <div class="m-1">...more</div>
       </div>
     );
   }

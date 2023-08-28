@@ -6,6 +6,12 @@ import { PrismaClient } from "@prisma/client";
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
 import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
 import { Sidebar } from "~/components/layout/sidebar/sidebar";
+import { Avatar } from "~/components/ui/avatar/avatar";
+import { Button } from "~/components/ui/button/button";
+import {
+  HiHandThumbDownOutline,
+  HiHandThumbUpOutline,
+} from "@qwikest/icons/heroicons";
 
 export const useGetPost = routeLoader$(async ({ status }) => {
   // const postId = parseInt(params['postId'], 1);
@@ -43,7 +49,30 @@ export default component$(() => {
     <section class="md:grid md:grid-cols-12 gap-4">
       <main class="md:col-span-8">
         <video src="./preview.mp4" controls={true} autoPlay muted loop />
-        <h1 class="text-lg font-bolder py-2">{post.value?.title}</h1>
+        <h1 class="text-lg font-bold py-2">{post.value?.title}</h1>
+        <div class="flex items-center mb-4 gap-4 flex-1">
+          <div>
+            <Avatar name="Jake" color="yello-200" />
+          </div>
+          <div>
+            <h3 class="font-bolder">Jake the publisher</h3>
+            <div class="text-sm text-slate-400">878 subscribers</div>
+          </div>
+          <div>
+            <Button intent="secondary">Subscribe</Button>
+          </div>
+          <div>
+            <Button intent="secondary">
+              <HiHandThumbDownOutline class="inline m-2" />
+              <span class="text-sm text-slate-400">120</span>
+              <HiHandThumbUpOutline class="inline m-2" />
+              <span class="text-sm text-slate-400">72</span>
+            </Button>
+          </div>
+          <div>
+            <Button>Share</Button>
+          </div>
+        </div>
         <InlineExpander content={post.value?.description || ""} length={150} />
         <CommentPanel />
       </main>
