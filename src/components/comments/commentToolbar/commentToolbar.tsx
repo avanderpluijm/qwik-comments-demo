@@ -12,7 +12,9 @@ export const CommentToolbar = component$(() => {
   const collapsed = useSignal(true);
 
   // Return a random number between 0 and 100
-  const randomVoteCount = Math.floor(Math.random() * (100 - 0 + 1) + 0);
+  const randomVoteCount = $(() =>
+    Math.floor(Math.random() * (100 - 0 + 1) + 0)
+  );
 
   // Toggle the collapsed state
   const toggle = $(() => (collapsed.value = !collapsed.value));
@@ -24,13 +26,13 @@ export const CommentToolbar = component$(() => {
           <Button intent="secondary" square={true} padding="tight">
             <HiHandThumbUpOutline />
           </Button>
-          <span class="text-sm text-slate-400">{randomVoteCount}</span>
+          <span class="text-sm text-slate-400">{randomVoteCount()}</span>
         </div>
         <div>
           <Button intent="secondary" square={true} padding="tight">
             <HiHandThumbDownOutline />
           </Button>
-          <span class="text-sm text-slate-400">{randomVoteCount}</span>
+          <span class="text-sm text-slate-400">{randomVoteCount()}</span>
         </div>
         <Button intent="secondary" clickHandler={toggle}>
           Reply
