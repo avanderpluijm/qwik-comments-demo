@@ -15,6 +15,7 @@ import {
 export const useGetPost = routeLoader$(async ({ params, status }) => {
   const slug = params["slug"];
   const prisma = new PrismaClient();
+
   const post = await prisma.post.findUnique({
     where: { slug },
     include: {
@@ -28,9 +29,9 @@ export const useGetPost = routeLoader$(async ({ params, status }) => {
   return post;
 });
 
-export const useComments = routeLoader$(async ({ status }) => {
+export const useComments = routeLoader$(async ({ params, status }) => {
   const prisma = new PrismaClient();
-  const post = await prisma.post.findFirst();
+  const post = await prisma.post.findFirst({ where: { slug: params["slug"] } });
   if (!post) status(404);
   if (!post) return null;
 

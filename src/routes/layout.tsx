@@ -9,12 +9,12 @@ export const useGetCurrentUser = routeLoader$(async () => {
 })
 
 // Context to mimic authorization state
-export const CTX = createContextId<{ authenticated: boolean, user: User }>('auth');
+export const CTX = createContextId<{ authenticated: boolean, user?: User }>('auth');
 
 export default component$(() => {
   const user = useGetCurrentUser(); 
 
-  const authData = useStore({ authenticated: user.value?.id || false, user: user.value });
+  const authData = useStore({ authenticated: user.value?.username != undefined || false, user: user.value || undefined });
   useContextProvider(CTX, authData); 
   
   return (
