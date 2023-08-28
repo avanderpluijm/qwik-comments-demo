@@ -23,7 +23,7 @@ export const CommentForm = component$<CommentProps>((props) => {
   return (
     <section class="flex my-4">
       <div>
-        <Avatar name={user.user.name} color={user.user.color} />
+        <Avatar name={user.user.username} color={user.user.color} />
       </div>
 
       <Form class="mb-2 flex-1 flex flex-col content-end" action={action}>

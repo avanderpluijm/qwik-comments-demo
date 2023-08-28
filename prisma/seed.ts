@@ -14,16 +14,20 @@ async function seed() {
     Array.from({ length: 100 }).map(() =>
       prisma.user.create({
         data: {
-          name: faker.internet.displayName(),
+          username: faker.internet.displayName(),
           color: faker.internet.color(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         },
       })
     )
   );
-
   const userIds = users.map((user) => user.id);
   console.log(`Created ${userIds.length} users`);
 
+  // Create posts
   const posts = await Promise.all(
     Array.from({ length: userIds.length / 5 }).map(() =>
       prisma.post.create({
@@ -33,6 +37,7 @@ async function seed() {
           userId: userIds[Math.floor(Math.random() * userIds.length)],
           thumbnail: faker.image.url(),
           createdAt: faker.date.past(),
+          slug: faker.lorem.slug(),
         },
       })
     )

@@ -17,7 +17,7 @@ export default component$(() => {
         {users.value.map((user) => (
           <li key={user.id}>
             <a href={`/users/${user.id}`}>
-              {user.name} ({user.email})
+              {user.username} ({user.email})
             </a>
           </li>
         ))}

@@ -5,7 +5,7 @@ import { Header } from '~/components/layout/header/header';
 
 export const useGetCurrentUser = routeLoader$(async () => {
   const prisma = new PrismaClient();
-  return await prisma.user.findFirst({where: {name: 'kyle'}});
+  return await prisma.user.findFirst();
 })
 
 // Context to mimic authorization state

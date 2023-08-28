@@ -17,14 +17,16 @@ export const CommentList = component$(() => {
         <div key={index} class="flex mb-2">
           <div>
             <Avatar
-              name={comment.user.name}
+              name={comment.user.username}
               color={comment.user.color}
               size={12}
             />
           </div>
           <div class="flex-1">
             <div>
-              <span class="text-xs font-bold mr-2">@{comment.user.name}</span>
+              <span class="text-xs font-bold mr-2">
+                @{comment.user.username}
+              </span>
               <span class="text-xs text-slate-500">
                 {dayjs(comment.createdAt).fromNow()}
               </span>

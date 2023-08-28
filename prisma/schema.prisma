@@ -11,17 +11,22 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  posts    Post[]
-  comments Comment[]
-  likes    Like[]
-  color    String    @default("green-400")
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique
+  password  String
+  firstName String?
+  lastName  String?
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  color     String    @default("green-400")
 }
 
 model Post {
   id          Int       @id @default(autoincrement())
   title       String
+  slug        String    @unique
   description String?
   thumbnail   String?
   createdAt   DateTime  @default(now())
