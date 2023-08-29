@@ -14,16 +14,19 @@ export const CommentForm = component$<CommentProps>((props) => {
   const { reply } = props;
 
   const action = useAddComment();
-  const user = useContext(CTX);
+  const userContext = useContext(CTX);
 
   const hasFocus = useSignal(false);
 
-  if (!user.authenticated) return <div>Sign in to comment</div>;
+  if (!userContext.authenticated) return <div>Sign in to comment</div>;
 
   return (
     <section class="flex my-4">
       <div>
-        <Avatar name={user.user.username} color={user.user.color} />
+        <Avatar
+          name={userContext.user?.username || "NN"}
+          color={userContext.user?.color || "#FFF"}
+        />
       </div>
 
       <Form class="mb-2 flex-1 flex flex-col content-end" action={action}>
