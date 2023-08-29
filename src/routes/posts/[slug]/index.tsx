@@ -11,6 +11,23 @@ import {
   HiHandThumbDownOutline,
   HiHandThumbUpOutline,
 } from "@qwikest/icons/heroicons";
+import { RelatedPanel } from "~/components/related/relatedPanel/relatedPanel";
+
+export const useGetRandomPost = routeLoader$(async () => {
+  const count = 20;
+  const prisma = new PrismaClient();
+  const itemCount = await prisma.post.count();
+  const skip = Math.max(0, Math.floor(Math.random() * itemCount) - count);
+
+  return await prisma.post.findMany({
+    include: {
+      _count: { select: { comments: { where: { parent: null } } } },
+      user: true,
+    },
+    take: 20,
+    skip,
+  });
+});
 
 export const useGetPost = routeLoader$(async ({ params, status }) => {
   const slug = params["slug"];
@@ -61,7 +78,11 @@ export default component$(() => {
         <h1 class="text-lg font-bold py-2">{post.value?.title}</h1>
         <div class="flex items-center mb-4 gap-4 flex-1">
           <div>
-            <Avatar name={post.value?.user.username} color="yello-200" />
+            <Avatar
+              name={post.value?.user.username}
+              color={post.value?.user.color}
+              size="lg"
+            />
           </div>
           <div>
             <h3 class="font-bolder">{post.value?.user.username}</h3>
@@ -90,7 +111,9 @@ export default component$(() => {
         <InlineExpander content={post.value?.description || ""} length={150} />
         <CommentPanel />
       </main>
-      <Sidebar />
+      <Sidebar>
+        <RelatedPanel />
+      </Sidebar>
     </section>
   );
 });
