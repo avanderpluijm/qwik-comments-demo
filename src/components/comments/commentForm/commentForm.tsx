@@ -21,11 +21,12 @@ export const CommentForm = component$<CommentProps>((props) => {
   if (!userContext.authenticated) return <div>Sign in to comment</div>;
 
   return (
-    <section class="flex my-4">
+    <section class="flex my-4 gap-4">
       <div>
         <Avatar
           name={userContext.user?.username || "NN"}
           color={userContext.user?.color || "#FFF"}
+          size="lg"
         />
       </div>
 

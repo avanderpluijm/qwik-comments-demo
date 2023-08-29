@@ -1,12 +1,11 @@
 import { component$ } from "@builder.io/qwik";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import { Link } from "@builder.io/qwik-city";
 
 import { CommentForm } from "~/components/comments/commentForm/commentForm";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import { Avatar } from "~/components/ui/avatar/avatar";
 import { useComments } from "~/routes/posts/[slug]";
-dayjs.extend(relativeTime);
+import { fromNow } from "~/utils/date";
 
 export const CommentList = component$(() => {
   const comments = useComments();
@@ -14,21 +13,24 @@ export const CommentList = component$(() => {
   return (
     <div class="my-4">
       {comments.value?.map((comment, index) => (
-        <div key={index} class="flex mb-2">
-          <div>
+        <div key={index} class="flex mb-2 gap-4">
+          <Link href={`/users/${comment.user.id}`}>
             <Avatar
               name={comment.user.username}
               color={comment.user.color}
-              size={12}
+              size="lg"
             />
-          </div>
+          </Link>
           <div class="flex-1">
             <div>
               <span class="text-xs font-bold mr-2">
-                @{comment.user.username}
+                <Link href={`/users/${comment.user.id}`}>
+                  @{comment.user.username}
+                </Link>
               </span>
               <span class="text-xs text-slate-500">
-                {dayjs(comment.createdAt).fromNow()}
+                {comment.createdAt.toDateString()}
+                {fromNow(comment.createdAt)}
               </span>
             </div>
             <div class="py-2 text-sm">{comment.message}</div>
