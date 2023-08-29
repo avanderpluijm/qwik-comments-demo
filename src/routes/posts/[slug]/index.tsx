@@ -1,20 +1,20 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
+import {
+  HiHandThumbDownOutline,
+  HiHandThumbUpOutline,
+} from "@qwikest/icons/heroicons";
 
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
 import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
 import { Sidebar } from "~/components/layout/sidebar/sidebar";
 import { Avatar } from "~/components/ui/avatar/avatar";
 import { Button } from "~/components/ui/button/button";
-import {
-  HiHandThumbDownOutline,
-  HiHandThumbUpOutline,
-} from "@qwikest/icons/heroicons";
 import { RelatedPanel } from "~/components/related/relatedPanel/relatedPanel";
 
 export const useGetRandomPost = routeLoader$(async () => {
-  const count = 20;
+  const count = 10;
   const prisma = new PrismaClient();
   const itemCount = await prisma.post.count();
   const skip = Math.max(0, Math.floor(Math.random() * itemCount) - count);
@@ -24,7 +24,7 @@ export const useGetRandomPost = routeLoader$(async () => {
       _count: { select: { comments: { where: { parent: null } } } },
       user: true,
     },
-    take: 20,
+    take: count,
     skip,
   });
 });
@@ -67,7 +67,7 @@ export default component$(() => {
     <section class="md:grid md:grid-cols-12 gap-4">
       <main class="md:col-span-8">
         <video
-          class="ratio-16/9"
+          class="ratio-video w-full"
           src="/preview.mp4"
           placeholder={post.value?.thumbnail}
           controls={true}
@@ -76,18 +76,18 @@ export default component$(() => {
           loop
         />
         <h1 class="text-lg font-bold py-2">{post.value?.title}</h1>
-        <div class="flex items-center mb-4 gap-4 flex-1">
-          <div>
+        <div class="flex items-center mb-4 gap-4 justify-between">
+          <div class="flex gap-2">
             <Avatar
               name={post.value?.user.username}
               color={post.value?.user.color}
               size="lg"
             />
-          </div>
-          <div>
-            <h3 class="font-bolder">{post.value?.user.username}</h3>
-            {/* TODO: add publisher subscribers count */}
-            <div class="text-sm text-slate-400">878 subscribers</div>
+            <div>
+              <h3 class="font-bolder">{post.value?.user.username}</h3>
+              {/* TODO: add publisher subscribers count */}
+              <div class="text-sm text-slate-400">878 subscribers</div>
+            </div>
           </div>
           <div>
             {/* TODO: add publisher subscribe action */}

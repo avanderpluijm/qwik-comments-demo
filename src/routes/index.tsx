@@ -39,7 +39,6 @@ export default component$(() => {
             <a href={`/posts/${post.slug}`}>
               <img src={post.thumbnail} width={400} height={200} />
               <div class="text-sm p-2">{post.title}</div>
-              {post._count?.comments}
             </a>
           </div>
         ))}
