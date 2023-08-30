@@ -1,19 +1,20 @@
-import { component$ } from "@builder.io/qwik";
+import {
+  component$,
+  createContextId,
+  useContextProvider,
+  useStore,
+} from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
-import {
-  HiHandThumbDownOutline,
-  HiHandThumbUpOutline,
-} from "@qwikest/icons/heroicons";
 
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
 import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
 import { Sidebar } from "~/components/layout/sidebar/sidebar";
-import { Avatar } from "~/components/ui/avatar/avatar";
-import { Button } from "~/components/ui/button/button";
 import { RelatedPanel } from "~/components/related/relatedPanel/relatedPanel";
+import { PublisherToolbar } from "~/components/post/publisherToolbar/publisherToolbar";
+import { Video } from "~/components/ui/video/video";
 
-export const useGetRandomPost = routeLoader$(async () => {
+export const useGetRandomPosts = routeLoader$(async () => {
   const count = 10;
   const prisma = new PrismaClient();
   const itemCount = await prisma.post.count();
@@ -52,65 +53,44 @@ export const useComments = routeLoader$(async ({ params, status }) => {
   if (!post) status(404);
   if (!post) return null;
 
-  return await prisma.comment.findMany({
+  const commentCount = await prisma.comment.count({
+    where: { postId: post.id, parentId: null },
+  });
+  const comments = await prisma.comment.findMany({
     where: { postId: post.id, parentId: null },
     include: { _count: { select: { children: {} } }, user: true },
+    take: 5,
   });
+
+  return { commentCount, comments };
 });
+
+export const commentContext = createContextId<any>("comments");
 
 export default component$(() => {
   const post = useGetPost();
+  // Get the server side comments
+  const comments = useComments();
+  // Create a store for the comments
+  const commentStore = useStore(comments.value || {});
+
+  // Create a context provider for the comments
+  useContextProvider(commentContext, commentStore);
 
   if (!post.value) return null;
 
   return (
     <section class="md:grid md:grid-cols-12 gap-4">
       <main class="md:col-span-8">
-        <video
-          class="ratio-video w-full"
-          src="/preview.mp4"
-          placeholder={post.value?.thumbnail}
-          controls={true}
-          autoPlay
-          muted
-          loop
-        />
-        <h1 class="text-lg font-bold py-2">{post.value?.title}</h1>
-        <div class="flex items-center mb-4 gap-4 justify-between">
-          <div class="flex gap-2">
-            <Avatar
-              name={post.value?.user.username}
-              color={post.value?.user.color}
-              size="lg"
-            />
-            <div>
-              <h3 class="font-bolder">{post.value?.user.username}</h3>
-              {/* TODO: add publisher subscribers count */}
-              <div class="text-sm text-slate-400">878 subscribers</div>
-            </div>
-          </div>
-          <div>
-            {/* TODO: add publisher subscribe action */}
-            <Button intent="secondary">Subscribe</Button>
-          </div>
-          <div>
-            <Button intent="secondary">
-              <HiHandThumbDownOutline class="inline m-2" />
-              {/* TODO: add publisher likes */}
-              <span class="text-sm text-slate-400">120</span>
-              {/* TODO: add publisher dislikes */}
-              <HiHandThumbUpOutline class="inline m-2" />
-              <span class="text-sm text-slate-400">72</span>
-            </Button>
-          </div>
-          <div>
-            {/* TODO: add share buttons */}
-            <Button>Share</Button>
-          </div>
-        </div>
+        <Video post={post} />
+
+        <h1>{post.value?.title}</h1>
+
+        <PublisherToolbar />
         <InlineExpander content={post.value?.description || ""} length={150} />
         <CommentPanel />
       </main>
+
       <Sidebar>
         <RelatedPanel />
       </Sidebar>

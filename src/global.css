@@ -1,14 +1,26 @@
 /* TODO: is this the best way to use fonts? They are also downloaded to public folder */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-bold;
+}
+h1 {
+  @apply text-xl py-2;
+}
+
 /* ContentEditable placeholder text */
-[data-placeholder]:empty:before{
-    content: attr(data-placeholder);
-    
-    @apply text-sm text-slate-600;
+[data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+
+  @apply text-sm text-slate-600;
 }
