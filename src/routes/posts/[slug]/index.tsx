@@ -5,6 +5,7 @@ import {
   useStore,
 } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
 
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
@@ -97,3 +98,16 @@ export default component$(() => {
     </section>
   );
 });
+
+export const head: DocumentHead = ({ resolveValue }) => {
+  const post = resolveValue(useGetPost);
+  return {
+    title: post?.title || "Video post",
+    meta: [
+      {
+        name: "description",
+        content: post?.description?.substring(0, 255) || "Video post",
+      },
+    ],
+  };
+};
