@@ -1,20 +1,35 @@
-import { component$, useContext } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { component$, useStore } from "@builder.io/qwik";
+import { Link, server$ } from "@builder.io/qwik-city";
+import { PrismaClient } from "@prisma/client";
 
 import { CommentForm } from "~/components/comments/commentForm/commentForm";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import { Avatar } from "~/components/ui/avatar/avatar";
-import { Button } from "~/components/ui/button/button";
-import { commentContext } from "~/routes/posts/[slug]";
+import { useComments, useGetPost } from "~/routes/posts/[slug]";
 import { fromNow } from "~/utils/date";
 
+// Fetch comments from the server for a given post
+const fetchComments = server$(
+  async (postId: number, skip: number, take = 5, parentId?: number) => {
+    const prisma = new PrismaClient();
+    return await prisma.comment.findMany({
+      where: { postId, parentId },
+      include: { _count: { select: { children: {} } }, user: true },
+      take,
+      skip,
+    });
+  }
+);
+
 export const CommentList = component$(() => {
-  const comments = useContext(commentContext);
+  const post = useGetPost();
+  const initialComments = useComments();
+  const commentStore: any = useStore(initialComments.value || {});
 
   return (
     <>
       <div class="my-4">
-        {comments.comments.map((comment: any, index: number) => (
+        {commentStore.comments.map((comment: any, index: number) => (
           <div key={index} class="flex mb-2 gap-4">
             <Link href={`/users/${comment.user.id}`}>
               <Avatar
@@ -54,8 +69,18 @@ export const CommentList = component$(() => {
           </div>
         ))}
       </div>
-      {comments.comments.length < comments.commentCount && (
-        <Button intent="secondary">Load more comments</Button>
+      {(commentStore.comments?.length || 0) <
+        (commentStore.commentCount || 0) && (
+        <button
+          onClick$={async () => {
+            if (!post.value) return;
+            const skip = (commentStore.comments?.length || 0) + 1;
+            const newComments: any = await fetchComments(post.value?.id, skip);
+            commentStore.comments.push(...newComments);
+          }}
+        >
+          Load more comments
+        </button>
       )}
     </>
   );
