@@ -22,11 +22,9 @@ const createUsers = async (length: number) => {
       prisma.user.create({
         data: {
           username: faker.internet.displayName(),
-          color: faker.internet.color(),
           email: faker.internet.email(),
           password: faker.internet.password(),
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
+          avatar: faker.image.avatar(),
         },
       })
     )
@@ -85,22 +83,17 @@ const createCommentLikes = async (factor: number) => {
 
   // Maximum number of likes possible
   const maxLikes = userIds.length;
-  console.log("maxLikes", maxLikes);
   // Random number of likes
   const likes = Math.floor(Math.random() * (maxLikes + 1));
-  console.log("likes", likes);
   // Maximum number of dislikes
   const maxDislikes = userIds.length - likes;
-  console.log("maxDislikes", maxDislikes);
   // Random number of dislikes
   const dislikes = Math.floor(Math.random() * (maxDislikes + 1));
-  console.log("dislikes", dislikes);
 
   const shuffledComments = shuffleArray(commentIds).slice(
     0,
     commentIds.length * factor
   );
-  console.log(shuffledComments.length);
   const likedComments = shuffledComments.slice(0, likes) as number[];
   const dislikedComments = shuffledComments.slice(
     likes,
@@ -136,12 +129,10 @@ const createCommentLikes = async (factor: number) => {
     )
   );
   console.log(`Created ${commentDislikes.length} comment likes`);
-
   return;
 };
 
 const createReplies = async (factor: number) => {
-  console.log("create replies");
   const commentIds = await getCommentIds();
   const userIds = await getUserIds();
 
@@ -172,6 +163,7 @@ const createReplies = async (factor: number) => {
   );
   const replyIds = replies.map((reply) => reply.id);
   console.log(`Created ${replyIds.length} replies`);
+  return;
 };
 
 // // Subscribers

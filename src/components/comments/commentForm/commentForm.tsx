@@ -1,10 +1,10 @@
-import { component$, useContext, useSignal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { Form } from "@builder.io/qwik-city";
 
-import { useAddComment } from "~/routes";
-import { CTX } from "~/routes/layout";
-import { Avatar } from "~/components/ui/avatar/avatar";
-import { Button } from "~/components/ui/button/button";
+import { useAddComment } from "~/routes/(app)";
+import { Avatar } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { useCurrentUser } from "~/routes/(app)/layout";
 
 interface CommentProps {
   reply?: boolean;
@@ -12,22 +12,17 @@ interface CommentProps {
 
 export const CommentForm = component$<CommentProps>((props) => {
   const { reply } = props;
+  const userSig = useCurrentUser();
 
   const action = useAddComment();
-  const userContext = useContext(CTX);
-
   const hasFocus = useSignal(false);
 
-  if (!userContext.authenticated) return <div>Sign in to comment</div>;
+  if (!userSig.value?.id) return <div>Sign in to comment</div>;
 
   return (
     <section class="flex my-4 gap-4">
       <div>
-        <Avatar
-          name={userContext.user?.username || "NN"}
-          color={userContext.user?.color || "#FFF"}
-          size="lg"
-        />
+        <Avatar src={userSig.value?.avatar} size="lg" />
       </div>
 
       <Form class="mb-2 flex-1 flex flex-col content-end" action={action}>
@@ -45,12 +40,8 @@ export const CommentForm = component$<CommentProps>((props) => {
         {hasFocus.value && (
           <div class="text-right mt-2">
             <div class="flex content-end gap-1">
-              <Button type="reset" intent="secondary">
-                Cancel
-              </Button>
-              <Button type="submit" intent="primary">
-                {reply ? "Reply" : "Comment"}
-              </Button>
+              <Button type="reset">Cancel</Button>
+              <Button type="submit">{reply ? "Reply" : "Comment"}</Button>
             </div>
             {action.value?.success && <div>Success!</div>}
             {action.value?.failed && <p>{action.value.fieldErrors?.comment}</p>}

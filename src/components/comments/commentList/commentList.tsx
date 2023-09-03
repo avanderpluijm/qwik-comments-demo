@@ -1,8 +1,11 @@
 import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
-import { useGetPost, useInitialCommentsLoader } from "~/routes/posts/[slug]";
 import { CommentItem } from "../commentItem/commentItem";
+import {
+  useGetPost,
+  useInitialCommentsLoader,
+} from "~/routes/(app)/posts/[slug]";
 
 // Fetch comments from the server for a given post
 export const fetchComments = server$(

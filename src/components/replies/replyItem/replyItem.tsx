@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 
-import { Avatar } from "~/components/ui/avatar/avatar";
+import { Avatar } from "~/components/ui/avatar";
 import { fromNow } from "~/utils/date";
 
 export const ReplyItem = component$((props: { reply: any }) => {
@@ -10,7 +10,7 @@ export const ReplyItem = component$((props: { reply: any }) => {
   return (
     <div class="flex mb-2 gap-4">
       <Link href={`/users/${reply.user.id}`}>
-        <Avatar name={reply.user.username} color={reply.user.color} size="lg" />
+        <Avatar src={reply.user.avatar} size="lg" />
       </Link>
       <div class="flex-1">
         <div>

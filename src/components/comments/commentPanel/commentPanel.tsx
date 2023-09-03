@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { CommentForm } from "../commentForm/commentForm";
 import { CommentList } from "../commentList/commentList";
-import { useGetPost } from "~/routes/posts/[slug]";
+import { useGetPost } from "~/routes/(app)/posts/[slug]";
 
 export const CommentPanel = component$(() => {
   const postSignal = useGetPost();

@@ -9,9 +9,9 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
-    "build.server": "vite build -c adapters/fastify/vite.config.ts",
+    "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
-    "deploy": "echo 'Run \"npm run qwik add\" to install a server adapter'",
+    "deploy": "vercel deploy",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
@@ -33,12 +33,15 @@
     "@fastify/compress": "^6.4.0",
     "@fastify/static": "^6.10.2",
     "@prisma/client": "4.16.2",
+    "@tailwindcss/forms": "^0.5.6",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/crypto-js": "^4.1.1",
     "@types/eslint": "8.44.2",
     "@types/node": "^20.5.6",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
     "autoprefixer": "^10.4.15",
+    "daisyui": "^3.6.4",
     "eslint": "8.45.0",
     "eslint-plugin-qwik": "^1.2.9",
     "fastify": "^4.22.2",
@@ -50,6 +53,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "undici": "5.23.0",
+    "vercel": "^29.1.1",
     "vite": "4.4.9",
     "vite-tsconfig-paths": "4.2.0"
   },
@@ -57,7 +61,8 @@
     "@modular-forms/qwik": "^0.20.2",
     "@qwikest/icons": "^0.0.8",
     "crypto-js": "^4.1.1",
-    "dayjs": "^1.11.9"
+    "dayjs": "^1.11.9",
+    "jose": "^4.14.5"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

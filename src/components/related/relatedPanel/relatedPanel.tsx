@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { useGetRandomPosts } from "~/routes/posts/[slug]";
+import { useGetRandomPosts } from "~/routes/(app)/posts/[slug]";
 
 export const RelatedPanel = component$(() => {
   const posts = useGetRandomPosts();

@@ -1,34 +1,35 @@
-import { $, component$, useContext } from "@builder.io/qwik";
-import { Avatar } from "~/components/ui/avatar/avatar";
+import { component$ } from "@builder.io/qwik";
+import { Form, Link } from "@builder.io/qwik-city";
+import { Avatar } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 
-import { CTX } from "~/routes/layout";
+import { useCurrentUser, useLogout } from "~/routes/(app)/layout";
 
 export const UserMenu = component$(() => {
-  // Get user data from top level context, mimicking authentication state.
-  const userData = useContext(CTX);
+  const userSig = useCurrentUser();
+  const logoutSig = useLogout();
 
-  // Toggle authentication state, mimicking login/logout.
-  const toggle = $(() => {
-    userData.authenticated = !userData.authenticated;
-    userData.user = undefined;
-  });
-
-  // Render a button that toggles the authentication state.
   return (
     <div class="flex gap-4 items-center justify-center">
-      {userData.user && (
+      {userSig.value && (
         <div class="flex gap-2 justify-center h-full items-center">
-          <Avatar
-            name={userData.user.username}
-            color={userData.user.color}
-            size="md"
-          />
-          <span class="text-sm">{userData.user.username}</span>
+          <Avatar src={userSig.value.avatar} size="md" />
+          <span class="text-sm">{userSig.value.username}</span>
         </div>
       )}
-      <button onClick$={toggle} class="hover:bg-slate-600 py-2 px-4 rounded">
-        {userData.authenticated ? "Logout" : "Login"}
-      </button>
+      {userSig.value?.id && (
+        <Form action={logoutSig}>
+          <Button
+            type="submit"
+            loading={logoutSig.isRunning}
+            colorScheme="btn-ghost"
+          >
+            Logout
+          </Button>
+        </Form>
+      )}
+
+      {!userSig.value?.id && <Link href="/login">Login</Link>}
     </div>
   );
 });

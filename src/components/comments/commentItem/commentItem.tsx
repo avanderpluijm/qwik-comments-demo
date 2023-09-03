@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 
-import { Avatar } from "~/components/ui/avatar/avatar";
+import { Avatar } from "~/components/ui/avatar";
 import { fromNow } from "~/utils/date";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import { CommentForm } from "~/components/comments/commentForm/commentForm";
@@ -17,11 +17,7 @@ export const CommentItem = component$<Props>((props) => {
   return (
     <div class="flex mb-2 gap-4">
       <Link href={`/users/${comment.user.id}`}>
-        <Avatar
-          name={comment.user.username}
-          color={comment.user.color}
-          size="lg"
-        />
+        <Avatar src={comment.user.avatar} size="lg" />
       </Link>
       <div class="flex-1">
         <div>

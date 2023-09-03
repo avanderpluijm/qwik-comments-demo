@@ -1,9 +1,9 @@
 import { component$ } from "@builder.io/qwik";
 
-import { Video } from "~/components/ui/video/video";
-import { useGetPost } from "~/routes/posts/[slug]";
+import { Video } from "~/components/ui/video";
+import { useGetPost } from "~/routes/(app)/posts/[slug]";
 import { PublisherToolbar } from "~/components/post/publisherToolbar/publisherToolbar";
-import { InlineExpander } from "~/components/ui/inlineExpander/inlineExpander";
+import { InlineExpander } from "~/components/ui/inlineExpander";
 import { CommentPanel } from "~/components/comments/commentPanel/commentPanel";
 
 export const PostPanel = component$(() => {
