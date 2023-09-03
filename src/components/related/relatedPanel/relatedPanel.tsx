@@ -1,5 +1,4 @@
 import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
 import { useGetRandomPosts } from "~/routes/posts/[slug]";
 
 export const RelatedPanel = component$(() => {
@@ -10,7 +9,7 @@ export const RelatedPanel = component$(() => {
     <>
       {posts.value.map((post) => (
         <div key={post.id} class="mb-2">
-          <Link
+          <a
             href={`/posts/${post.slug}`}
             class="font-bold leading-tight text-sm flex gap-2"
           >
@@ -26,7 +25,7 @@ export const RelatedPanel = component$(() => {
                 @{post.user.username}
               </div>
             </div>
-          </Link>
+          </a>
         </div>
       ))}
     </>

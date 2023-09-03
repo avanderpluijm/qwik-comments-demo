@@ -1,15 +1,15 @@
 import { component$ } from "@builder.io/qwik";
 import type { Signal } from "@builder.io/qwik";
-import type { Post } from "@prisma/client";
 
 interface Props {
-  post: Signal<Post>;
+  post?: Signal;
 }
 export const Video = component$<Props>((props) => {
+  if (!props.post?.value?.thumbnail) return null;
   return (
     <div class="relative">
       <img
-        src={props.post.value?.thumbnail}
+        src={props.post?.value?.thumbnail}
         class="overflow-hidden aspect-video rounded-xl w-full"
         width={800}
         height={450}

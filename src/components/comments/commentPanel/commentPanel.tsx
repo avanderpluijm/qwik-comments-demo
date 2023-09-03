@@ -1,15 +1,15 @@
-import { component$, useContext } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { CommentForm } from "../commentForm/commentForm";
 import { CommentList } from "../commentList/commentList";
-import { commentContext } from "~/routes/posts/[slug]";
+import { useGetPost } from "~/routes/posts/[slug]";
 
 export const CommentPanel = component$(() => {
-  const commentCtx = useContext(commentContext);
+  const postSignal = useGetPost();
 
   return (
     <section class="">
       <h2 class=" text-base py-4 text-slate-50">
-        {commentCtx.length} Comments
+        {postSignal.value?._count.comments} Comments
       </h2>
       <CommentForm />
       <CommentList />

@@ -1,85 +1,88 @@
-import { component$, useStore } from "@builder.io/qwik";
-import { Link, server$ } from "@builder.io/qwik-city";
+import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { server$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
-
-import { CommentForm } from "~/components/comments/commentForm/commentForm";
-import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
-import { Avatar } from "~/components/ui/avatar/avatar";
-import { useComments, useGetPost } from "~/routes/posts/[slug]";
-import { fromNow } from "~/utils/date";
+import { useGetPost, useInitialCommentsLoader } from "~/routes/posts/[slug]";
+import { CommentItem } from "../commentItem/commentItem";
 
 // Fetch comments from the server for a given post
-const fetchComments = server$(
-  async (postId: number, skip: number, take = 5, parentId?: number) => {
+export const fetchComments = server$(
+  async ({
+    postId,
+    rangeStart = 0,
+    parentId,
+    take = 5,
+  }: {
+    postId: number;
+    rangeStart?: number;
+    parentId?: number;
+    take?: number;
+  }) => {
     const prisma = new PrismaClient();
-    return await prisma.comment.findMany({
-      where: { postId, parentId },
-      include: { _count: { select: { children: {} } }, user: true },
-      take,
-      skip,
-    });
+    const [comments, count] = await prisma.$transaction([
+      prisma.comment.findMany({
+        where: { postId, parentId: parentId || null },
+        include: {
+          user: true,
+          _count: { select: { replies: {}, likes: {}, dislikes: {} } },
+        },
+        take,
+        orderBy: { createdAt: "desc" },
+        skip: rangeStart * take,
+      }),
+      prisma.comment.count({ where: { postId, parentId: parentId || null } }),
+    ]);
+    return { pagination: { total: count }, data: comments };
   }
 );
+export type CommentsResult = Awaited<ReturnType<typeof fetchComments>>;
 
 export const CommentList = component$(() => {
-  const post = useGetPost();
-  const initialComments = useComments();
-  const commentStore: any = useStore(initialComments.value || {});
+  // post signal from route loader
+  const postSignal = useGetPost();
+  // initial data from server
+  const initialData = useInitialCommentsLoader();
+  // Set the current range to 0 (start from the beginning)
+  const currentRange = useSignal(0);
+  // Data to display. Will be updated when new data is fetched
+  const dataToDisplay = useStore<CommentsResult>(
+    initialData.value || { pagination: { total: 0 }, data: [] }
+  );
+  // New data fetched from the server
+  const newComments = useSignal<CommentsResult>();
+  // If there are no comments, return null
+  if (!postSignal.value) return null;
+
+  useTask$(({ track }) => {
+    const data = track(() => newComments.value);
+    if (!data) return;
+    dataToDisplay.pagination.total = data.pagination.total;
+    dataToDisplay.data = [...dataToDisplay.data, ...data.data];
+  });
+
+  useTask$(async ({ track }) => {
+    const newRange = track(() => currentRange.value);
+    if (!newRange) return;
+    const comments = await fetchComments({
+      postId: postSignal.value?.id,
+      rangeStart: newRange,
+    });
+    newComments.value = comments;
+  });
 
   return (
     <>
-      <div class="my-4">
-        {commentStore.comments.map((comment: any, index: number) => (
-          <div key={index} class="flex mb-2 gap-4">
-            <Link href={`/users/${comment.user.id}`}>
-              <Avatar
-                name={comment.user.username}
-                color={comment.user.color}
-                size="lg"
-              />
-            </Link>
-            <div class="flex-1">
-              <div>
-                <span class="text-xs font-bold mr-2">
-                  <Link href={`/users/${comment.user.id}`}>
-                    @{comment.user.username}
-                  </Link>
-                </span>
-                <span class="text-xs text-slate-500">
-                  {fromNow(comment.createdAt)}
-                </span>
-              </div>
-              <div class="py-2 text-sm">{comment.message}</div>
-
-              <CommentToolbar>
-                <CommentForm reply={true} />
-              </CommentToolbar>
-
-              {comment._count?.children > 0 && (
-                <div class="expander-wrapper">
-                  <div class="expander-header text-blue-500 font-semibold text-sm p-2 cursor-pointer hover:bg-slate-700 inline-block rounded-xl my-1">
-                    <span class="expander-button mr-2">&#9207;</span>
-                    {comment._count.children}{" "}
-                    {comment._count.children > 1 ? "replies" : "reply"}
-                  </div>
-                  <div class="expander-content"></div>
-                </div>
-              )}
-            </div>
-          </div>
+      <div>
+        {dataToDisplay.data?.map((comment) => (
+          <CommentItem key={comment.id} comment={comment} />
         ))}
       </div>
-      {(commentStore.comments?.length || 0) <
-        (commentStore.commentCount || 0) && (
+      {dataToDisplay.data.length < dataToDisplay.pagination.total && (
         <button
-          onClick$={async () => {
-            if (!post.value) return;
-            const skip = (commentStore.comments?.length || 0) + 1;
-            const newComments: any = await fetchComments(post.value?.id, skip);
-            commentStore.comments.push(...newComments);
-          }}
+          class="bg-transparen b-0 text-white rounded-full cursor-pointer text-sm bg-slate-700 hover:bg-slate-500 font-bold px-4 py-2"
+          onClick$={() => (currentRange.value = currentRange.value + 1)}
         >
-          Load more comments
+          Load More (
+          {dataToDisplay.pagination.total - dataToDisplay.data.length})
         </button>
       )}
     </>
