@@ -8,8 +8,8 @@ export const useCurrentUser = routeLoader$(
   ({ sharedMap }) => sharedMap.get("user") as AuthUser | undefined
 );
 
-export const useLogout = globalAction$(async (_, requestEvent) =>
-  handleLogout(requestEvent)
+export const useLogout = globalAction$(
+  async (_, requestEvent) => await handleLogout(requestEvent)
 );
 
 export default component$(() => {

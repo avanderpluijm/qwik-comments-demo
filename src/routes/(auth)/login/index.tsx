@@ -35,6 +35,7 @@ export default component$(() => {
               label="Email or Username"
               id="username"
               name="username"
+              autoFocus
               value={actionSig.formData?.get("username") ?? ""}
               error={actionSig.value?.fieldErrors?.username?.[0]}
             />

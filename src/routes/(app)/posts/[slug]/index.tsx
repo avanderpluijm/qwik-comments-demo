@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { routeAction$, routeLoader$, z, zod$ } from "@builder.io/qwik-city";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
 
@@ -7,40 +7,30 @@ import { Sidebar } from "~/components/layout/sidebar/sidebar";
 import { RelatedPanel } from "~/components/related/relatedPanel/relatedPanel";
 import { PostPanel } from "~/components/post/postPanel/postPanel";
 import { fetchComments } from "~/components/comments/commentList/commentList";
+import { getPostBySlug, getRandomPosts } from "~/services/post";
+import { handleCreateComment } from "~/services/comment";
 
-export const useGetRandomPosts = routeLoader$(async () => {
-  const count = 10;
-  const prisma = new PrismaClient();
-  const itemCount = await prisma.post.count();
-  const skip = Math.max(0, Math.floor(Math.random() * itemCount) - count);
+export const useGetRandomPosts = routeLoader$(async () => getRandomPosts(10));
 
-  return await prisma.post.findMany({
-    include: {
-      _count: { select: { comments: { where: { parent: null } } } },
-      user: true,
-    },
-    take: count,
-    skip,
-  });
-});
-
-export const useGetPost = routeLoader$(async ({ params, status }) => {
-  const slug = params["slug"];
-  const prisma = new PrismaClient();
-
-  const post = await prisma.post.findUnique({
-    where: { slug },
-    include: {
-      _count: { select: { comments: { where: { parent: null } } } },
-      user: true,
-    },
-  });
-  if (!post) status(404);
-
-  return post;
-});
+export const useGetPost = routeLoader$(
+  async ({ params }) => await getPostBySlug(params["slug"])
+);
 
 export type Post = Awaited<ReturnType<typeof useGetPost>>;
+
+export const useCreateComment = routeAction$(
+  async (formData, requestEvent) => {
+    console.log("useCreateComment", formData);
+    return handleCreateComment(
+      { ...formData, postId: +formData.postId },
+      requestEvent
+    );
+  },
+  zod$({
+    message: z.string().nonempty("Enter value for reply field"),
+    postId: z.string().nonempty(),
+  })
+);
 
 export const useInitialCommentsLoader = routeLoader$(
   async ({ params, status }) => {

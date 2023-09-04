@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { routeAction$, routeLoader$, z, zod$ } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { PrismaClient } from "@prisma/client";
 
 export const useGetPosts = routeLoader$(async ({ status }) => {
@@ -14,16 +14,6 @@ export const useGetPosts = routeLoader$(async ({ status }) => {
   if (!posts) status(404);
   return posts;
 });
-
-// Comment Form submit action
-export const useAddComment = routeAction$((data) => {
-  // This will only run on the server when the user submits the form (or when the action is called programmatically)
-  console.log("useAddComment routeaction", data);
-  return {
-    success: true,
-    commentId: 1234,
-  };
-}, zod$({ comment: z.string() }));
 
 export default component$(() => {
   const posts = useGetPosts();

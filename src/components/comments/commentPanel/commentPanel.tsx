@@ -6,12 +6,14 @@ import { useGetPost } from "~/routes/(app)/posts/[slug]";
 export const CommentPanel = component$(() => {
   const postSignal = useGetPost();
 
+  if (!postSignal.value) return null;
+
   return (
     <section class="">
       <h2 class=" text-base py-4 text-slate-50">
         {postSignal.value?._count.comments} Comments
       </h2>
-      <CommentForm />
+      <CommentForm postId={postSignal.value?.id} />
       <CommentList />
     </section>
   );

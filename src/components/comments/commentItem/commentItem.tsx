@@ -5,7 +5,7 @@ import { Avatar } from "~/components/ui/avatar";
 import { fromNow } from "~/utils/date";
 import { CommentToolbar } from "~/components/comments/commentToolbar/commentToolbar";
 import { CommentForm } from "~/components/comments/commentForm/commentForm";
-import { ReplyList } from "~/components/replies/replyList/replyList";
+import { ReplyList } from "~/components/reply/replyList/replyList";
 
 interface Props {
   comment: any;
