@@ -1,15 +1,16 @@
 import { component$ } from "@builder.io/qwik";
-import { UserMenu } from "./user-menu";
-// import { HiBars3Solid } from "@qwikest/icons/heroicons";
 import { Link } from "@builder.io/qwik-city";
+
+import { UserMenu } from "~/components/layout/header/user-menu";
 import { ThermIcon } from "~/components/ui/icons/therm";
+import { BarsIcon } from "~/components/ui/icons/bars";
 
 export const Header = component$(() => {
   return (
     <header class="bg-slate-800 px-2 mt-0 fixed w-full z-10 pin-t h-16">
       <div class="flex justify-between items-center h-full">
         <div class="font-black p-2 flex gap-1">
-          {/* <HiBars3Solid class="inline mr-4" /> */}
+          <BarsIcon />
           <ThermIcon />
           <Link href="/">QwikTube</Link>
         </div>

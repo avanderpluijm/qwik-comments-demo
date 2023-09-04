@@ -1,9 +1,4 @@
 import { $, Slot, component$, useSignal } from "@builder.io/qwik";
-// import {
-//   HiHandThumbDownOutline,
-//   HiHandThumbUpOutline,
-// } from "@qwikest/icons/heroicons";
-
 import { Button } from "~/components/ui/button";
 import { ThumbDownIcon, ThumbUpIcon } from "~/components/ui/icons/thumb";
 
